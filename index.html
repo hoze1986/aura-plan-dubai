@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AuraPlan – Dubai Influencer Content Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #D4AF37;
+  --gold-light: #F5E6C8;
+  --black: #0A0A0A;
+  --dark: #121212;
+  --card: #1A1A1A;
+  --text: #F5F5F5;
+  --muted: #A0A0A0;
+  --accent: #C9A227;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--black);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+header {
+  background: linear-gradient(135deg, #0A0A0A 0%, #1A1208 50%, #0A0A0A 100%);
+  padding: 1.2rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #2A2A2A;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--gold), #FFF8E7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.logo span { font-weight: 500; opacity: 0.8; }
+nav a {
+  color: var(--text);
+  text-decoration: none;
+  margin-left: 1.5rem;
+  font-size: 0.9rem;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+nav a:hover, nav a.active { opacity: 1; color: var(--gold); }
+.hero {
+  text-align: center;
+  padding: 4rem 1.5rem 3rem;
+  background: radial-gradient(ellipse at top, #2A1F0A 0%, #0A0A0A 70%);
+}
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  margin-bottom: 0.8rem;
+  line-height: 1.2;
+}
+.hero p { max-width: 620px; margin: 0 auto 2rem; color: var(--muted); font-size: 1.1rem; }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+.section { margin-bottom: 3rem; }
+h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  margin-bottom: 1.2rem;
+  color: var(--gold-light);
+}
+.card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid #2A2A2A;
+  margin-bottom: 1.2rem;
+}
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem; }
+.spot-card {
+  background: var(--card);
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #2A2A2A;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.spot-card:hover { transform: translateY(-4px); border-color: var(--gold); }
+.spot-img {
+  height: 160px;
+  background-size: cover;
+  background-position: center;
+}
+.spot-body { padding: 1.2rem; }
+.spot-body h3 { font-size: 1.15rem; margin-bottom: 0.4rem; }
+.tag {
+  display: inline-block;
+  background: rgba(212,175,55,0.15);
+  color: var(--gold);
+  font-size: 0.75rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  margin-right: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+label { display: block; font-size: 0.85rem; margin-bottom: 0.4rem; color: var(--muted); }
+input, select, textarea {
+  width: 100%;
+  background: #111;
+  border: 1px solid #333;
+  color: var(--text);
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+button, .btn {
+  background: linear-gradient(135deg, var(--gold), #B8962E);
+  color: #000;
+  border: none;
+  padding: 0.85rem 1.6rem;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: transform 0.1s, opacity 0.2s;
+}
+button:hover, .btn:hover { transform: translateY(-1px); opacity: 0.95; }
+button.secondary {
+  background: transparent;
+  border: 1px solid #444;
+  color: var(--text);
+}
+.chat-box {
+  background: #111;
+  border-radius: 12px;
+  height: 340px;
+  overflow-y: auto;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid #2A2A2A;
+}
+.msg { margin-bottom: 0.8rem; max-width: 85%; }
+.msg.user { margin-left: auto; text-align: right; }
+.msg.bot { margin-right: auto; }
+.bubble {
+  display: inline-block;
+  padding: 0.7rem 1rem;
+  border-radius: 14px;
+  font-size: 0.92rem;
+}
+.user .bubble { background: var(--gold); color: #000; border-bottom-right-radius: 4px; }
+.bot .bubble { background: #252525; border-bottom-left-radius: 4px; }
+.plan-item {
+  background: #151515;
+  border-left: 3px solid var(--gold);
+  padding: 1rem;
+  margin-bottom: 0.8rem;
+  border-radius: 0 8px 8px 0;
+}
+.plan-item strong { color: var(--gold-light); }
+footer {
+  text-align: center;
+  padding: 2rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+  border-top: 1px solid #222;
+}
+.hidden { display: none; }
+.tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.tab {
+  padding: 0.5rem 1rem;
+  background: #1A1A1A;
+  border: 1px solid #333;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+.tab.active { background: var(--gold); color: #000; border-color: var(--gold); }
+@media (max-width: 600px) {
+  header { flex-direction: column; gap: 0.8rem; }
+  nav a { margin: 0 0.6rem; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">Aura<span>Plan</span></div>
+  <nav>
+    <a href="#" class="active" onclick="showSection('home')">Home</a>
+    <a href="#" onclick="showSection('planner')">AI Planner</a>
+    <a href="#" onclick="showSection('spots')">Spots</a>
+    <a href="#" onclick="showSection('chat')">Play with AI</a>
+  </nav>
+</header>
+
+<div id="home" class="section">
+  <div class="hero">
+    <h1>Create. Plan. Glow in Dubai.</h1>
+    <p>Your AI-powered content studio for influencers. Discover the perfect topics, iconic spots, and ready-to-shoot ideas tailored to Dubai’s luxury lifestyle.</p>
+    <button onclick="showSection('planner')">Start Planning →</button>
+  </div>
+  <div class="container">
+    <div class="grid">
+      <div class="card">
+        <h3>🎯 Smart Topic Ideas</h3>
+        <p>Get niche-specific content angles that perform — from luxury lifestyle to authentic Dubai moments.</p>
+      </div>
+      <div class="card">
+        <h3>📍 Perfect Locations</h3>
+        <p>Curated Instagrammable spots with best times, angles, and content hooks for each place.</p>
+      </div>
+      <div class="card">
+        <h3>✨ Interactive AI</h3>
+        <p>Play around with prompts. Refine ideas, generate weekly plans, and explore “what if” scenarios.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="planner" class="section hidden">
+  <div class="container">
+    <h2>AI Content Planner</h2>
+    <div class="card">
+      <label>Your Niche</label>
+      <select id="niche">
+        <option value="lifestyle">Lifestyle & Luxury</option>
+        <option value="fashion">Fashion & Beauty</option>
+        <option value="food">Food & Dining</option>
+        <option value="fitness">Fitness & Wellness</option>
+        <option value="travel">Travel & Experiences</option>
+        <option value="family">Family & Parenting</option>
+      </select>
+      <label>Content Format</label>
+      <select id="format">
+        <option value="reel">Reel / TikTok</option>
+        <option value="post">Static Post / Carousel</option>
+        <option value="story">Stories Series</option>
+        <option value="vlog">Mini Vlog</option>
+      </select>
+      <label>Mood / Vibe</label>
+      <select id="mood">
+        <option value="aspirational">Aspirational & Luxe</option>
+        <option value="authentic">Authentic & Relatable</option>
+        <option value="fun">Fun & Energetic</option>
+        <option value="aesthetic">Soft Aesthetic</option>
+      </select>
+      <label>Any specific request? (optional)</label>
+      <textarea id="extra" rows="2" placeholder="e.g. sunset content, modest fashion, beach club, hidden gem..."></textarea>
+      <button onclick="generatePlan()">Generate Plan ✨</button>
+    </div>
+    <div id="planResult"></div>
+  </div>
+</div>
+
+<div id="spots" class="section hidden">
+  <div class="container">
+    <h2>Dubai Content Spots</h2>
+    <div class="tabs">
+      <div class="tab active" onclick="filterSpots('all')">All</div>
+      <div class="tab" onclick="filterSpots('iconic')">Iconic</div>
+      <div class="tab" onclick="filterSpots('hidden')">Hidden Gems</div>
+      <div class="tab" onclick="filterSpots('beach')">Beach & Water</div>
+    </div>
+    <div class="grid" id="spotsGrid"></div>
+  </div>
+</div>
+
+<div id="chat" class="section hidden">
+  <div class="container">
+    <h2>Play with AI</h2>
+    <p style="color:var(--muted); margin-bottom:1rem;">Ask anything — “Give me 3 sunset reel ideas”, “Best spots for fashion this week”, “Weekly plan for food niche”...</p>
+    <div class="card">
+      <div class="chat-box" id="chatBox">
+        <div class="msg bot"><div class="bubble">Hey! I’m your Dubai content muse. Tell me what you’re in the mood to create and I’ll craft ideas with perfect spots and hooks. ✨</div></div>
+      </div>
+      <div style="display:flex; gap:0.5rem;">
+        <input id="chatInput" placeholder="e.g. Plan a luxury day for reels..." onkeypress="if(event.key==='Enter')sendChat()">
+        <button onclick="sendChat()">Send</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  AuraPlan • Made for Dubai Influencers • Content ideas based on real local spots & trends
+</footer>
+
+<script>
+const spots = [
+  { name: "Burj Khalifa & Fountain Plaza", cat: "iconic", best: "Sunset / Blue hour", tip: "Souk Al Bahar bridge for full fountain + tower. Perfect for aspirational lifestyle reels.", ideas: ["Golden hour walk", "Fountain timing reaction", "Outfit reveal with tower"] },
+  { name: "Museum of the Future", cat: "iconic", best: "Night", tip: "Calligraphy facade glows. Stand from the park opposite or metro bridge.", ideas: ["Future-facing aesthetic", "Arabic calligraphy close-ups", "Night glow portraits"] },
+  { name: "Dubai Frame", cat: "iconic", best: "Golden hour", tip: "Frames old Deira on one side, Downtown on the other. Clean geometry.", ideas: ["Before/after city contrast", "Fashion pose inside frame", "Sunset silhouette"] },
+  { name: "Palm Jumeirah / The View", cat: "iconic", best: "Sunset", tip: "Level 52 for full palm shape. Also great from beach or yacht.", ideas: ["Aerial-style view content", "Palm + Burj Al Arab composition", "Luxury staycation"] },
+  { name: "Al Fahidi / Al Seef", cat: "hidden", best: "Morning", tip: "Heritage lanes, wind towers, creek. Soft light, authentic Dubai feel.", ideas: ["Cultural storytelling", "Modest fashion walks", "Coffee in traditional setting"] },
+  { name: "Alserkal Avenue", cat: "hidden", best: "Late afternoon", tip: "Murals, art galleries, industrial chic. Perfect for creative fashion.", ideas: ["Art backdrop outfit changes", "Street style", "Creative process reels"] },
+  { name: "Dubai Marina Walk", cat: "beach", best: "Blue hour", tip: "Yacht backdrop, skyscrapers, water reflections. Very versatile.", ideas: ["Evening stroll", "Yacht day out", "Night lights aesthetic"] },
+  { name: "JBR Beach / La Mer", cat: "beach", best: "Morning or sunset", tip: "Open beach, promenade, casual luxury. Great for lifestyle and fitness.", ideas: ["Beach workout", "Casual summer looks", "Sunset golden content"] },
+  { name: "Desert Safari / Dunes", cat: "iconic", best: "Sunset", tip: "Golden dunes, camel, dune bashing. Timeless Dubai content.", ideas: ["Adventure day", "Desert glam", "Sunrise/sunset contrast"] },
+  { name: "Aura Skypool / Beach Clubs", cat: "beach", best: "Daytime golden", tip: "Rooftop pools and beach clubs for high-end lifestyle. Check creator programs.", ideas: ["Poolside luxury", "Day party vibes", "Wellness escape"] }
+];
+
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+  document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+  event.target.classList.add('active');
+  if (id === 'spots') renderSpots('all');
+}
+
+function filterSpots(cat) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  renderSpots(cat);
+}
+
+function renderSpots(cat) {
+  const grid = document.getElementById('spotsGrid');
+  const filtered = cat === 'all' ? spots : spots.filter(s => s.cat === cat);
+  grid.innerHTML = filtered.map(s => `
+    <div class="spot-card">
+      <div class="spot-img" style="background:linear-gradient(135deg,#1a1a1a,#2a2010),url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600&auto=format&fit=crop') center/cover"></div>
+      <div class="spot-body">
+        <h3>${s.name}</h3>
+        <div><span class="tag">${s.cat}</span><span class="tag">Best: ${s.best}</span></div>
+        <p style="font-size:0.9rem;color:#ccc;margin:0.6rem 0;">${s.tip}</p>
+        <small style="color:var(--gold);">Ideas: ${s.ideas.join(' • ')}</small>
+      </div>
+    </div>
+  `).join('');
+}
+
+const ideasDB = {
+  lifestyle: {
+    aspirational: [
+      { topic: "Sunset luxury balcony moment", place: "Dubai Marina penthouse view or Address Boulevard", hook: "POV: Your evening in Dubai looks like this" },
+      { topic: "A day in the life of Dubai elegance", place: "Downtown + Palm combination", hook: "From morning coffee to night lights" },
+      { topic: "Hidden luxury corners", place: "DIFC cafes or Bluewaters", hook: "Spots that feel private in a busy city" }
+    ],
+    authentic: [
+      { topic: "Real Dubai mornings", place: "Local cafe in JLT or Business Bay", hook: "No filter, just Dubai energy" },
+      { topic: "Expat life moments", place: "Neighborhood walk + Marina", hook: "What living here actually feels like" }
+    ]
+  },
+  fashion: {
+    aspirational: [
+      { topic: "Outfit transition at iconic landmark", place: "Museum of the Future or Dubai Frame", hook: "One outfit, three angles of Dubai" },
+      { topic: "Modest luxury fashion", place: "Al Fahidi or Dubai Mall Fashion Avenue", hook: "Elegance that works everywhere" }
+    ],
+    aesthetic: [
+      { topic: "Soft tones + architecture", place: "Alserkal Avenue murals", hook: "When the background does half the work" }
+    ]
+  },
+  food: {
+    fun: [
+      { topic: "Best bites this week", place: "Marina restaurants or Dubai Mall", hook: "You need to try this" },
+      { topic: "Desert dinner experience", place: "Desert camp or Al Hadheerah", hook: "Dinner under the stars" }
+    ],
+    authentic: [
+      { topic: "Local favorites", place: "Al Seef or Deira", hook: "Dubai beyond the tourist menus" }
+    ]
+  },
+  fitness: {
+    fun: [
+      { topic: "Beach workout series", place: "JBR or Kite Beach", hook: "Train with a view" },
+      { topic: "Wellness day", place: "Beach club or desert yoga", hook: "Reset in Dubai" }
+    ]
+  },
+  travel: {
+    aspirational: [
+      { topic: "Dubai in one day highlights", place: "Multiple: Frame + Marina + Palm", hook: "How to see the icons efficiently" },
+      { topic: "Sunset spots ranked", place: "Various waterfronts", hook: "The best golden hour locations" }
+    ]
+  }
+};
+
+function generatePlan() {
+  const niche = document.getElementById('niche').value;
+  const format = document.getElementById('format').value;
+  const mood = document.getElementById('mood').value;
+  const extra = document.getElementById('extra').value.toLowerCase();
+  
+  let pool = ideasDB[niche] || ideasDB.lifestyle;
+  let ideas = pool[mood] || pool.aspirational || Object.values(pool).flat();
+  if (!ideas.length) ideas = Object.values(pool).flat();
+  
+  // Simple enhancement based on extra
+  if (extra.includes('sunset') || extra.includes('golden')) {
+    ideas = ideas.concat([{ topic: "Golden hour content", place: "Any waterfront or dunes", hook: "Light does the magic" }]);
+  }
+  if (extra.includes('beach') || extra.includes('pool')) {
+    ideas = ideas.concat([{ topic: "Beach club day", place: "Aura, Nikki or Zero Gravity", hook: "Day to night transition" }]);
+  }
+  
+  const selected = ideas.slice(0, 3);
+  const result = document.getElementById('planResult');
+  result.innerHTML = `<h3 style="margin:1.5rem 0 1rem; color:var(--gold-light);">Your Custom Plan</h3>` + 
+    selected.map((idea, i) => `
+      <div class="plan-item">
+        <strong>Idea ${i+1}: ${idea.topic}</strong><br>
+        <span style="color:#aaa;">Format: ${format}</span><br>
+        📍 <strong>Place:</strong> ${idea.place}<br>
+        🎣 <strong>Hook:</strong> "${idea.hook}"<br>
+        <small style="color:var(--muted);">Tip: Film during best light, keep first 3 seconds strong.</small>
+      </div>
+    `).join('') + 
+    `<button class="secondary" style="margin-top:1rem;" onclick="savePlan()">Save this plan</button>`;
+}
+
+function sendChat() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+  const box = document.getElementById('chatBox');
+  box.innerHTML += `<div class="msg user"><div class="bubble">${text}</div></div>`;
+  input.value = '';
+  box.scrollTop = box.scrollHeight;
+  
+  setTimeout(() => {
+    const reply = generateAIReply(text.toLowerCase());
+    box.innerHTML += `<div class="msg bot"><div class="bubble">${reply}</div></div>`;
+    box.scrollTop = box.scrollHeight;
+  }, 600);
+}
+
+function generateAIReply(q) {
+  if (q.includes('sunset') || q.includes('golden')) {
+    return "Sunset ideas: 1) Walk along Souk Al Bahar bridge as the fountain starts (Burj Khalifa backdrop). 2) Marina yacht or promenade blue hour. 3) Desert dune ridge. Hook: “This is why Dubai sunsets hit different.” Film 15-20 min before and after.";
+  }
+  if (q.includes('fashion') || q.includes('outfit')) {
+    return "Fashion plan: Use Museum of the Future for futuristic looks, Alserkal for creative/editorial, Al Fahidi for modest elegance, and Dubai Mall for luxury retail. Transition reels work great — change outfit against the same landmark.";
+  }
+  if (q.includes('week') || q.includes('calendar') || q.includes('plan')) {
+    return "Weekly plan sketch:<br>• Mon: Lifestyle morning at local cafe + Marina walk<br>• Wed: Iconic landmark outfit/reel (Frame or Museum)<br>• Fri: Beach club or Palm content<br>• Sun: Authentic neighborhood or food. Mix formats and keep one “hero” post.";
+  }
+  if (q.includes('beach') || q.includes('pool') || q.includes('club')) {
+    return "Beach & club spots: JBR/La Mer for open vibe, Aura Skypool for rooftop luxury, Nikki Beach or Zero Gravity for day-to-night. Best for lifestyle, fitness, and fashion. Check their creator collaboration programs.";
+  }
+  if (q.includes('hidden') || q.includes('local') || q.includes('authentic')) {
+    return "Hidden gems: Al Fahidi lanes, Al Seef creek, Alserkal Avenue art, Karama street art, and early morning at Dubai Creek. These give a more unique, less saturated feel than pure icons.";
+  }
+  return "Great idea! Based on that, try pairing it with: Burj Khalifa fountain plaza for aspirational, Al Fahidi for authentic culture, or Marina for versatile lifestyle. Want me to expand into a full reel script or weekly plan?";
+}
+
+function savePlan() {
+  alert('Plan saved locally! (In a full version this would sync to your account.)');
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  // default
+});
+</script>
+</body>
+</html>
