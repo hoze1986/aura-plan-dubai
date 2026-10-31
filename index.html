@@ -388,31 +388,100 @@ function generatePlan() {
   const mood = document.getElementById('mood').value;
   const extra = document.getElementById('extra').value.toLowerCase();
   
-  let pool = ideasDB[niche] || ideasDB.lifestyle;
-  let ideas = pool[mood] || pool.aspirational || Object.values(pool).flat();
-  if (!ideas.length) ideas = Object.values(pool).flat();
+  const ideas = generateDetailedIdeas(niche, format, mood, extra);
   
-  // Simple enhancement based on extra
-  if (extra.includes('sunset') || extra.includes('golden')) {
-    ideas = ideas.concat([{ topic: "Golden hour content", place: "Any waterfront or dunes", hook: "Light does the magic" }]);
-  }
-  if (extra.includes('beach') || extra.includes('pool')) {
-    ideas = ideas.concat([{ topic: "Beach club day", place: "Aura, Nikki or Zero Gravity", hook: "Day to night transition" }]);
-  }
-  
-  const selected = ideas.slice(0, 3);
   const result = document.getElementById('planResult');
-  result.innerHTML = `<h3 style="margin:1.5rem 0 1rem; color:var(--gold-light);">Your Custom Plan</h3>` + 
-    selected.map((idea, i) => `
-      <div class="plan-item">
+  result.innerHTML = `<h3 style="margin:1.5rem 0 1rem; color:var(--gold-light);">Your Detailed Content Plan</h3>` + 
+    ideas.map((idea, i) => `
+      <div class="plan-item" style="margin-bottom:1.5rem;">
         <strong>Idea ${i+1}: ${idea.topic}</strong><br>
-        <span style="color:#aaa;">Format: ${format}</span><br>
+        <span style="color:#aaa;">Format: ${format} • Mood: ${mood}</span><br>
         📍 <strong>Place:</strong> ${idea.place}<br>
-        🎣 <strong>Hook:</strong> "${idea.hook}"<br>
-        <small style="color:var(--muted);">Tip: Film during best light, keep first 3 seconds strong.</small>
+        ⏰ <strong>Best Time:</strong> ${idea.time}<br>
+        🎣 <strong>Hook (first 3 seconds):</strong> "${idea.hook}"<br>
+        <div style="margin-top:0.8rem; padding:0.8rem; background:#111; border-radius:8px; font-size:0.9rem;">
+          <strong style="color:var(--gold);">Detailed Instructions:</strong><br>
+          <strong>Shot List:</strong><br>
+          ${idea.shots.map(s => `• ${s}`).join('<br>')}
+          <br><br>
+          <strong>Angles & Tips:</strong> ${idea.angles}<br>
+          <strong>Caption Idea:</strong> ${idea.caption}<br>
+          <strong>Hashtags:</strong> ${idea.hashtags}
+        </div>
+        <button class="secondary" style="margin-top:0.6rem; font-size:0.8rem;" onclick="toggleDetails(this)">Toggle Full Details</button>
       </div>
     `).join('') + 
     `<button class="secondary" style="margin-top:1rem;" onclick="savePlan()">Save this plan</button>`;
+}
+
+function generateDetailedIdeas(niche, format, mood, extra) {
+  const base = [
+    {
+      topic: "Golden Hour Luxury Walk",
+      place: "Souk Al Bahar bridge / Burj Khalifa fountain plaza",
+      time: "30 min before sunset",
+      hook: "This is what Dubai golden hour actually looks like",
+      shots: ["Slow walk toward camera with tower in background", "Fountain starts mid-shot reaction", "Close-up of outfit details with skyline", "Final wide shot of full fountain + tower"],
+      angles: "Use the bridge railing for leading lines. Shoot slightly low. Arrive early to claim the best spot facing the fountain.",
+      caption: "Some views never get old. Golden hour in Downtown hits different every single time.",
+      hashtags: "#DubaiGoldenHour #BurjKhalifa #DubaiLifestyle #ContentCreatorDubai"
+    },
+    {
+      topic: "Iconic Landmark Outfit Transition",
+      place: "Museum of the Future or Dubai Frame",
+      time: "Blue hour / night",
+      hook: "One location. Three looks. Dubai does the rest.",
+      shots: ["Full body establish shot", "Quick cut transition between outfits", "Close-up of fabric/details", "Final pose with landmark fully in frame"],
+      angles: "Use the calligraphy facade or the Frame geometry as natural frames. Night lighting makes colors pop.",
+      caption: "When the background does half the work for you.",
+      hashtags: "#MuseumOfTheFuture #DubaiFashion #OutfitTransition #DubaiInfluencer"
+    },
+    {
+      topic: "Authentic Dubai Morning",
+      place: "Al Fahidi lanes or Al Seef creek",
+      time: "Early morning (softer light, fewer crowds)",
+      hook: "The Dubai you don’t always see on your feed",
+      shots: ["Walking through narrow lanes", "Coffee moment with traditional architecture", "Detail shots of wind towers / textures", "Creek view if at Al Seef"],
+      angles: "Natural light only. Keep it candid. Soft filters work better here than heavy ones.",
+      caption: "Slow mornings in old Dubai. This side of the city has a completely different energy.",
+      hashtags: "#AlFahidi #OldDubai #DubaiHiddenGems #AuthenticDubai"
+    }
+  ];
+
+  // Customize based on inputs
+  if (extra.includes('beach') || extra.includes('pool') || niche === 'fitness') {
+    base[0] = {
+      topic: "Beach / Poolside Lifestyle",
+      place: "JBR, La Mer, or a beach club (Aura / Zero Gravity)",
+      time: "Late afternoon golden hour",
+      hook: "Training (or relaxing) with this view",
+      shots: ["Walk along the water", "Outfit or activewear detail", "Wide shot of beach + skyline", "Candid laughing or movement"],
+      angles: "Backlight for glow. Keep the horizon level. Use the water as a natural reflector.",
+      caption: "Dubai beaches in golden hour are unfair.",
+      hashtags: "#DubaiBeach #JBR #BeachClubDubai #DubaiLifestyle"
+    };
+  }
+
+  if (niche === 'food') {
+    base[1] = {
+      topic: "Visual Food Experience",
+      place: "Marina restaurants or Dubai Mall / Al Seef",
+      time: "Lunch or early dinner (better natural light)",
+      hook: "You need to try this",
+      shots: ["Dish reveal from above", "Close-up of textures / steam", "Your reaction", "Wide table + ambiance"],
+      angles: "Natural window light if possible. Overhead for plating. Keep first 2 seconds on the food.",
+      caption: "Found a new favourite. The presentation alone is content.",
+      hashtags: "#DubaiFood #DubaiRestaurants #FoodieDubai"
+    };
+  }
+
+  return base.slice(0, 3);
+}
+
+function toggleDetails(btn) {
+  const details = btn.previousElementSibling;
+  details.style.display = details.style.display === 'none' ? 'block' : 'none';
+  btn.textContent = details.style.display === 'none' ? 'Show Full Details' : 'Hide Full Details';
 }
 
 function sendChat() {
@@ -433,21 +502,18 @@ function sendChat() {
 
 function generateAIReply(q) {
   if (q.includes('sunset') || q.includes('golden')) {
-    return "Sunset ideas: 1) Walk along Souk Al Bahar bridge as the fountain starts (Burj Khalifa backdrop). 2) Marina yacht or promenade blue hour. 3) Desert dune ridge. Hook: “This is why Dubai sunsets hit different.” Film 15-20 min before and after.";
+    return "Sunset Plan:<br><strong>1. Souk Al Bahar bridge</strong> — Arrive 40 min before sunset. Film the fountain starting while walking. Hook: “This is why people fall in love with Dubai.”<br><strong>2. Marina promenade</strong> — Blue hour reflections. Walk toward camera with skyline behind.<br><strong>3. Desert ridge</strong> — Silhouette + dunes. Best for glam or adventure content.<br><br>Tip: Film both 15 min before and after sunset for variety.";
   }
   if (q.includes('fashion') || q.includes('outfit')) {
-    return "Fashion plan: Use Museum of the Future for futuristic looks, Alserkal for creative/editorial, Al Fahidi for modest elegance, and Dubai Mall for luxury retail. Transition reels work great — change outfit against the same landmark.";
+    return "Fashion Plan with details:<br>• <strong>Museum of the Future</strong> (night) — Use the glowing calligraphy as background. Transition reel between 2-3 outfits. Shoot from low angle.<br>• <strong>Dubai Frame</strong> — Stand inside for natural framing. Golden hour works best.<br>• <strong>Alserkal Avenue</strong> — Creative/editorial. Murals as backdrops. Soft light in late afternoon.<br><br>Hook idea: “One city, three completely different vibes.”";
   }
   if (q.includes('week') || q.includes('calendar') || q.includes('plan')) {
-    return "Weekly plan sketch:<br>• Mon: Lifestyle morning at local cafe + Marina walk<br>• Wed: Iconic landmark outfit/reel (Frame or Museum)<br>• Fri: Beach club or Palm content<br>• Sun: Authentic neighborhood or food. Mix formats and keep one “hero” post.";
+    return "Weekly Content Plan:<br>• <strong>Monday</strong> — Authentic morning (Al Fahidi or local café). Soft light, candid.<br>• <strong>Wednesday</strong> — Iconic landmark (Frame or Museum). Outfit or lifestyle reel.<br>• <strong>Friday</strong> — Beach or Palm content. Golden hour.<br>• <strong>Sunday</strong> — Food or neighborhood exploration.<br><br>Keep one hero Reel and support with Stories. Focus on strong first 3 seconds every time.";
   }
   if (q.includes('beach') || q.includes('pool') || q.includes('club')) {
-    return "Beach & club spots: JBR/La Mer for open vibe, Aura Skypool for rooftop luxury, Nikki Beach or Zero Gravity for day-to-night. Best for lifestyle, fitness, and fashion. Check their creator collaboration programs.";
+    return "Beach / Club Plan:<br><strong>Best spots:</strong> JBR or La Mer (open, easy), Aura Skypool (rooftop luxury), Zero Gravity (accessible day-to-night).<br><strong>Timing:</strong> Arrive mid-afternoon, film golden hour.<br><strong>Shots:</strong> Walk along water, outfit details, wide skyline, candid movement.<br><strong>Hook:</strong> “Dubai beaches in golden hour are unfair.”<br>Check creator collab programs at the clubs.";
   }
-  if (q.includes('hidden') || q.includes('local') || q.includes('authentic')) {
-    return "Hidden gems: Al Fahidi lanes, Al Seef creek, Alserkal Avenue art, Karama street art, and early morning at Dubai Creek. These give a more unique, less saturated feel than pure icons.";
-  }
-  return "Great idea! Based on that, try pairing it with: Burj Khalifa fountain plaza for aspirational, Al Fahidi for authentic culture, or Marina for versatile lifestyle. Want me to expand into a full reel script or weekly plan?";
+  return "I can build a full detailed plan for that. Try specifying niche + format (e.g. “fashion reels at night”) or ask for a weekly schedule, sunset ideas, or beach content. I’ll give you places, timing, shot lists, hooks and captions.";
 }
 
 function savePlan() {
